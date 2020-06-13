@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 data class Greeting(
-    val greeting: String
+    val message: String
 )
 
 @RestController
 class HelloController {
     @GetMapping("/api/hello")
     @ResponseBody
-    fun get() = Greeting("Hello, guest")
+    fun get() = Greeting("こにちわ、あきおちゃん！")
 }

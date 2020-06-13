@@ -10,7 +10,8 @@ spec:
   selector:
     matchLabels:
       app: demo-backend
-  strategy: {}
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       creationTimestamp: null
@@ -18,10 +19,19 @@ spec:
         app: demo-backend
     spec:
       containers:
-      - image: sentientmonkey/hello
-        name: hello
-        resources: {}
-status: {}
+        - image: sentientmonkey/hello
+          name: hello
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 3
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -35,7 +45,8 @@ spec:
   selector:
     matchLabels:
       app: demo-frontend
-  strategy: {}
+  strategy:
+    type: RollingUpdate
   template:
     metadata:
       creationTimestamp: null
@@ -43,10 +54,20 @@ spec:
         app: demo-frontend
     spec:
       containers:
-      - image: sentientmonkey/hello-frontend
-        name: hello-frontend
-        resources: {}
-status: {}
+        - image: sentientmonkey/hello-frontend
+          name: hello-frontend
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 3
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+
 ---
 apiVersion: v1
 kind: Service
@@ -57,15 +78,13 @@ metadata:
   name: demo-backend
 spec:
   ports:
-  - name: 8080-8080
-    port: 8080
-    protocol: TCP
-    targetPort: 8080
+    - name: 8080-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
   selector:
     app: demo-backend
-  type: ClusterIP
-status:
-  loadBalancer: {}
+  type: LoadBalancer
 ---
 apiVersion: v1
 kind: Service
@@ -76,12 +95,10 @@ metadata:
   name: demo-frontend
 spec:
   ports:
-  - name: 80-80
-    port: 80
-    protocol: TCP
-    targetPort: 80
+    - name: 3000-80
+      port: 3000
+      protocol: TCP
+      targetPort: 80
   selector:
     app: demo-frontend
-  type: ClusterIP
-status:
-  loadBalancer: {}
+  type: LoadBalancer

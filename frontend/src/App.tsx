@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import logo from "./logo.svg";
 import "./App.css";
 
 interface Greeting {
-  greeting: string;
+  message: string;
 }
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const response = await axios.get("/api/hello");
+      const response: AxiosResponse<Greeting> = await axios.get("/api/hello");
       setGreeting(response.data);
     })();
   }, []);
@@ -21,7 +21,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>{greeting?.greeting}</p>
+        <p>{greeting?.message}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
