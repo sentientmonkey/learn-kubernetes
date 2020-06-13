@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import logo from "./logo.svg";
+import "./App.css";
+
+interface Greeting {
+  greeting: string;
+}
 
 function App() {
-  const [greeting, setGreeting] = useState();
+  const [greeting, setGreeting] = useState<Greeting>();
 
   useEffect(() => {
     (async () => {
       const response = await axios.get("/api/hello");
-      setGreeting(response.data.greeting);
+      setGreeting(response.data);
     })();
   }, []);
 
@@ -17,9 +21,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {greeting}
-        </p>
+        <p>{greeting?.greeting}</p>
         <a
           className="App-link"
           href="https://reactjs.org"
