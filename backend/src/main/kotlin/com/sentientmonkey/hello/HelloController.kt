@@ -1,16 +1,15 @@
 package com.sentientmonkey.hello
 
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
-data class Greeting(
-    val message: String
-)
 
 @RestController
-class HelloController {
+class HelloController(val greetingService: GreetingService) {
     @GetMapping("/api/hello")
     @ResponseBody
-    fun get() = Greeting("こにちわ、あきおちゃん！")
+    fun get() = greetingService.get()
+
+    @PutMapping("/api/hello")
+    @ResponseBody
+    fun put(@RequestBody newGreeting: Greeting) = greetingService.put(newGreeting)
 }
