@@ -25,13 +25,20 @@ spec:
             httpGet:
               path: /healthy
               port: 8080
-            initialDelaySeconds: 5
-            timeoutSeconds: 10
+            initialDelaySeconds: 10
+            timeoutSeconds: 60
             failureThreshold: 3
           ports:
             - containerPort: 8080
               name: http
               protocol: TCP
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://my-release-postgresql.default.svc.cluster.local:5432/hello"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "hello"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "hello"
 ---
 apiVersion: apps/v1
 kind: Deployment

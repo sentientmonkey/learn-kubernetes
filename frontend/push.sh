@@ -4,5 +4,5 @@ set -ex
 
 pushd frontend
 ./build.sh
-docker push sentientmonkey/hello-backend
+docker push sentientmonkey/hello-frontend
 popd
